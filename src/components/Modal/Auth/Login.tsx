@@ -4,9 +4,7 @@ import { Button, Text } from "@chakra-ui/react";
 import { useSetRecoilState } from "recoil";
 import { authenticationModalState } from "@/src/atoms/authenticationModalAtom";
 
-type Props = {};
-
-const Login = (props: Props) => {
+const Login = () => {
   const setAuthenticationModalState = useSetRecoilState(
     authenticationModalState
   );
