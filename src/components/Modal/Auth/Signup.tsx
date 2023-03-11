@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import { Button, Text } from "@chakra-ui/react";
 import { useSetRecoilState } from "recoil";
 import { authenticationModalState } from "@/src/atoms/authenticationModalAtom";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "../../../firebase/clientApp";
+import { FIREBASE_ERRORS } from "@/src/firebase/errors";
 
 const Signup = () => {
   const setAuthenticationModalState = useSetRecoilState(
@@ -14,14 +17,24 @@ const Signup = () => {
     confirmPassword: "",
   });
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const [error, setError] = useState("");
+  const [createUserWithEmailAndPassword, user, loading, userError] =
+    useCreateUserWithEmailAndPassword(auth);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (error) setError("");
+    if (signupForm.password !== signupForm.confirmPassword) {
+      setError("Passwords do not match!");
+      return;
+    }
+    createUserWithEmailAndPassword(signupForm.email, signupForm.password);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSignupForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [event.target.name]: event.target.value,
     }));
   };
 
@@ -93,9 +106,22 @@ const Signup = () => {
         }}
         bg="gray.50"
       />
-      <Button type="submit" width="100%" height="36px" mt={2} mb={2}>
+      <Text textAlign="center" color="red" fontSize="10pt">
+        {error ||
+          FIREBASE_ERRORS[userError?.message as keyof typeof FIREBASE_ERRORS]}
+      </Text>
+
+      <Button
+        type="submit"
+        width="100%"
+        height="36px"
+        mt={2}
+        mb={2}
+        isLoading={loading}
+      >
         Sign Up
       </Button>
+
       <Flex fontSize="9pt" justifyContent="center">
         <Text mr={1}>Already a redditor</Text>
         <Text

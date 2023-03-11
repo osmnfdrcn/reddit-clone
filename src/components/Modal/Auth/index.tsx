@@ -10,13 +10,29 @@ import {
 } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import { useRecoilState } from "recoil";
-import { authenticationModalState } from "../../../atoms/authenticationModalAtom";
+import {
+  authenticationModalState,
+  IAuthenticationModalState,
+} from "../../../atoms/authenticationModalAtom";
 import OAuthButtons from "./OAuthButtons";
 import AuthInputs from "./AuthInputs";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../../firebase/clientApp";
+import { useEffect } from "react";
+import ResetPassword from "./ResetPassword";
+
 const AuthenticationModal = () => {
+  const [user, loading, error] = useAuthState(auth);
   const [modalState, setModalState] = useRecoilState(authenticationModalState);
   const handleClose = () =>
     setModalState((state) => ({ ...state, open: false }));
+
+  useEffect(() => {
+    if (user) {
+      handleClose();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return (
     <>
@@ -46,12 +62,17 @@ const AuthenticationModal = () => {
               justifyContent="center"
               width="70%"
             >
-              <OAuthButtons />
-              <Text color="gray.400" fontWeight={700}>
-                OR
-              </Text>
-              <AuthInputs />
-              {/* <ResetPassword /> */}
+              {modalState.view === "login" || modalState.view === "signup" ? (
+                <>
+                  <Text color="gray.400" fontWeight={700}>
+                    {" "}
+                    OR
+                  </Text>
+                  <AuthInputs />
+                </>
+              ) : (
+                <ResetPassword toggleView={() => {}} />
+              )}
             </Flex>
           </ModalBody>
         </ModalContent>

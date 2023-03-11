@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import { Button, Text } from "@chakra-ui/react";
 import { useSetRecoilState } from "recoil";
 import { authenticationModalState } from "@/src/atoms/authenticationModalAtom";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "../../../firebase/clientApp";
+import { FIREBASE_ERRORS } from "@/src/firebase/errors";
 
 const Login = () => {
   const setAuthenticationModalState = useSetRecoilState(
@@ -12,9 +15,12 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    signInWithEmailAndPassword(loginForm.email, loginForm.password);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,9 +76,37 @@ const Login = () => {
         }}
         bg="gray.50"
       />
-      <Button type="submit" width="100%" height="36px" mt={2} mb={2}>
+      <Text textAlign="center" color="red" fontSize="10pt">
+        {FIREBASE_ERRORS[error?.message as keyof typeof FIREBASE_ERRORS]}
+      </Text>
+      <Button
+        type="submit"
+        width="100%"
+        height="36px"
+        mt={2}
+        mb={2}
+        isLoading={loading}
+      >
         Login
       </Button>
+      <Flex justifyContent="center" mb={2}>
+        <Text fontSize="9pt" mr={1}>
+          Forgot your password?
+        </Text>
+        <Text
+          fontSize="9pt"
+          color="blue.500"
+          cursor="pointer"
+          onClick={() =>
+            setAuthenticationModalState((prev) => ({
+              ...prev,
+              view: "resetPassword",
+            }))
+          }
+        >
+          Reset
+        </Text>
+      </Flex>
       <Flex fontSize="9pt" justifyContent="center">
         <Text mr={1}>Next Here?</Text>
         <Text
