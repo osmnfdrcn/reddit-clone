@@ -64,14 +64,14 @@ const AuthenticationModal = () => {
             >
               {modalState.view === "login" || modalState.view === "signup" ? (
                 <>
+                  <OAuthButtons />
                   <Text color="gray.400" fontWeight={700}>
-                    {" "}
                     OR
                   </Text>
                   <AuthInputs />
                 </>
               ) : (
-                <ResetPassword toggleView={() => {}} />
+                <ResetPassword />
               )}
             </Flex>
           </ModalBody>
