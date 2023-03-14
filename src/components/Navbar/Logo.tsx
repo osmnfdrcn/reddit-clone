@@ -1,9 +1,6 @@
 import { Flex, Image } from "@chakra-ui/react";
 
-Flex;
-type Props = {};
-
-const Logo = (props: Props) => {
+const Logo = () => {
   return (
     <Flex
       align="center"

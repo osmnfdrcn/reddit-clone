@@ -1,11 +1,10 @@
-import { Flex, Input } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { Button, Text } from "@chakra-ui/react";
-import { useSetRecoilState } from "recoil";
 import { authenticationModalState } from "@/src/atoms/authenticationModalAtom";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase/clientApp";
 import { FIREBASE_ERRORS } from "@/src/firebase/errors";
+import { Button, Flex, Input, Text } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useSetRecoilState } from "recoil";
+import { auth } from "../../../firebase/clientApp";
 
 const Login = () => {
   const setAuthenticationModalState = useSetRecoilState(

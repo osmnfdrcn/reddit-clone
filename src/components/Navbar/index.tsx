@@ -1,12 +1,12 @@
-import { Flex, Image } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase/clientApp";
+import Directory from "./Directory";
 import Logo from "./Logo";
 import RightContent from "./RightContent/RightContent";
 import SearchInput from "./SearchInput";
-import { auth } from "../../firebase/clientApp";
-import { useAuthState } from "react-firebase-hooks/auth";
-import Directory from "./Directory";
 const Navbar = () => {
-  const [user, loading, error] = useAuthState(auth);
+  const [user] = useAuthState(auth);
 
   return (
     <Flex
@@ -16,7 +16,7 @@ const Navbar = () => {
       justify={{ md: "space-between" }}
     >
       <Logo />
-      {user && <Directory />}
+      {!!user && <Directory />}
       <SearchInput user={user} />
       <RightContent user={user} />
     </Flex>
